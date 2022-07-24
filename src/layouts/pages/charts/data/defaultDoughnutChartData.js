@@ -1,24 +1,16 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 const defaultDoughnutChartData = {
-  labels: ["Creative Tim", "Github", "Bootsnipp", "Dev.to", "Codeinwp"],
+  labels: [
+    "First class",
+    "Second class upper",
+    "Second class lower",
+    "Third class upper",
+    "Third class lower",
+    "Pass",
+  ],
   datasets: {
     label: "Projects",
     backgroundColors: ["info", "dark", "error", "secondary", "primary"],
-    data: [15, 20, 12, 60, 20],
+    data: [10, 15, 20, 12, 60, 20],
   },
 };
 

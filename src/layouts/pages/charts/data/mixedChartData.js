@@ -14,19 +14,31 @@ Coded by www.creative-tim.com
 */
 
 const mixedChartData = {
-  labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  labels: [
+    "100(1st)",
+    "100(2nd)",
+    "Erp",
+    "200(1st)",
+    "200(2nd)",
+    "Erp",
+    "300(1st)",
+    "300(2nd)",
+    "Erp",
+    "400(1st)",
+    "400(2nd)",
+  ],
   datasets: [
     {
       chartType: "thin-bar",
-      label: "Organic Search",
+      label: "Applied",
       color: "dark",
-      data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+      data: [50, 40, 90, 130, 300, 220, 500, 250, 400, 230, 500],
     },
     {
       chartType: "gradient-line",
-      label: "Referral",
+      label: "Left",
       color: "info",
-      data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+      data: [30, 40, 65, 90, 40, 140, 290, 290, 340, 230, 400],
     },
   ],
 };

@@ -1,13 +1,35 @@
+/**
+=========================================================
+* Material Dashboard 2 PRO React - v2.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+/**
+  This file is used for controlling the global states of the components,
+  you can customize the states for the different components here.
+*/
+
 import { createContext, useContext, useMemo, useReducer } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
+// The Material Dashboard 2 PRO React main context
 const MaterialUI = createContext();
 
 // Setting custom name for the context which is visible on react dev tools
 MaterialUI.displayName = "MaterialUIContext";
 
+// Material Dashboard 2 PRO React reducer
 function reducer(state, action) {
   switch (action.type) {
     case "MINI_SIDENAV": {

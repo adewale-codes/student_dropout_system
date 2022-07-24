@@ -18,7 +18,7 @@ import MDBox from "components/MDBox";
 import MDProgress from "components/MDProgress";
 
 // ProductPage page components
-import ProductCell from "layouts/ecommerce/products/product-page/components/ProductCell";
+import StudentCell from "layouts/ecommerce/products/product-page/components/StudentCell";
 import ReviewCell from "layouts/ecommerce/products/product-page/components/ReviewCell";
 import DefaultCell from "layouts/ecommerce/products/product-page/components/DefaultCell";
 
@@ -39,7 +39,7 @@ const dataTableData = {
 
   rows: [
     {
-      product: <ProductCell image={blackChair} name="Christopher Knight Home" />,
+      product: <StudentCell image={blackChair} name="Christopher Knight Home" />,
       price: <DefaultCell>$89.53</DefaultCell>,
       review: <ReviewCell rating={4.5} />,
       availability: (
@@ -50,7 +50,7 @@ const dataTableData = {
       id: <DefaultCell>230019</DefaultCell>,
     },
     {
-      product: <ProductCell image={chairPink} name="Bar Height Swivel Barstool" />,
+      product: <StudentCell image={chairPink} name="Bar Height Swivel Barstool" />,
       price: <DefaultCell>$99.99</DefaultCell>,
       review: <ReviewCell rating={5} />,
       availability: (
@@ -61,7 +61,7 @@ const dataTableData = {
       id: <DefaultCell>87120</DefaultCell>,
     },
     {
-      product: <ProductCell image={chairSteel} name="Signature Design by Ashley" />,
+      product: <StudentCell image={chairSteel} name="Signature Design by Ashley" />,
       price: <DefaultCell>$129.00</DefaultCell>,
       review: <ReviewCell rating={4.5} />,
       availability: (
@@ -72,7 +72,7 @@ const dataTableData = {
       id: <DefaultCell>412301</DefaultCell>,
     },
     {
-      product: <ProductCell image={chairWood} name="Modern Square" />,
+      product: <StudentCell image={chairWood} name="Modern Square" />,
       price: <DefaultCell>$59.99</DefaultCell>,
       review: <ReviewCell rating={4.5} />,
       availability: (

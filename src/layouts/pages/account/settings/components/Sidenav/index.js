@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
@@ -35,7 +20,6 @@ function Sidenav() {
     { icon: "security", label: "2FA", href: "2fa" },
     { icon: "badge", label: "accounts", href: "accounts" },
     { icon: "campaign", label: "notifications", href: "notifications" },
-    { icon: "settings_applications", label: "sessions", href: "sessions" },
     { icon: "delete", label: "delete account", href: "delete-account" },
   ];
 

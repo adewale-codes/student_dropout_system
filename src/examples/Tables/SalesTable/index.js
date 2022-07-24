@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useMemo } from "react";
 
 // prop-types is a library for typechecking of props
@@ -38,24 +23,14 @@ function SalesTable({ title, rows, shadow }) {
     const rowKey = `row-${key}`;
 
     Object.entries(row).map(([cellTitle, cellContent]) =>
-      Array.isArray(cellContent)
-        ? tableRows.push(
-            <SalesTableCell
-              key={cellContent[1]}
-              title={cellTitle}
-              content={cellContent[1]}
-              image={cellContent[0]}
-              noBorder={key === rows.length - 1}
-            />
-          )
-        : tableRows.push(
-            <SalesTableCell
-              key={cellContent}
-              title={cellTitle}
-              content={cellContent}
-              noBorder={key === rows.length - 1}
-            />
-          )
+      tableRows.push(
+        <SalesTableCell
+          key={cellContent}
+          title={cellTitle}
+          content={cellContent}
+          noBorder={key === rows.length - 1}
+        />
+      )
     );
 
     return <TableRow key={rowKey}>{tableRows}</TableRow>;

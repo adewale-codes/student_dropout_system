@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// react-router-dom components
 import { Link } from "react-router-dom";
 
 // prop-types is a library for typechecking of props
@@ -41,29 +25,31 @@ function CategoriesList({ title, categories }) {
       mb={categories.length - 1 === key ? 0 : 1}
     >
       <MDBox display="flex" alignItems="center">
-        <MDBox
-          display="grid"
-          alignItems="center"
-          justifyContent="center"
-          bgColor={color}
-          borderRadius="lg"
-          shadow="md"
-          color="white"
-          width="2rem"
-          height="2rem"
-          mr={2}
-          variant="gradient"
-          fontSize="0.875rem"
-        >
-          <Icon
-            sx={{
-              display: "grid",
-              placeItems: "center",
-            }}
+        {icon && (
+          <MDBox
+            display="grid"
+            alignItems="center"
+            justifyContent="center"
+            bgColor={color}
+            borderRadius="lg"
+            shadow="md"
+            color="white"
+            width="2rem"
+            height="2rem"
+            mr={2}
+            variant="gradient"
+            fontSize="0.875rem"
           >
-            {icon}
-          </Icon>
-        </MDBox>
+            <Icon
+              sx={{
+                display: "grid",
+                placeItems: "center",
+              }}
+            >
+              {icon}
+            </Icon>
+          </MDBox>
+        )}
         <MDBox display="flex" flexDirection="column">
           <MDTypography variant="button" color={color} fontWeight="medium" gutterBottom>
             {name}

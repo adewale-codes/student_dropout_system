@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useRef, useEffect, useState, useMemo } from "react";
 
 // porp-types is a library for typechecking of props
@@ -46,78 +31,78 @@ function MixedChart({ icon, title, description, height, chart }) {
   useEffect(() => {
     const chartDatasets = chart.datasets
       ? chart.datasets.map((dataset) => {
-          let finalConfigs;
+        let finalConfigs;
 
-          const defaultLine = {
-            ...dataset,
-            type: "line",
-            tension: 0,
-            borderWidth: 4,
-            pointRadius: 2,
-            pointBackgroundColor: colors[dataset.color]
-              ? colors[dataset.color || "dark"].main
-              : colors.dark.main,
-            borderColor: colors[dataset.color]
-              ? colors[dataset.color || "dark"].main
-              : colors.dark.main,
-            maxBarThickness: 6,
-          };
+        const defaultLine = {
+          ...dataset,
+          type: "line",
+          tension: 0,
+          borderWidth: 4,
+          pointRadius: 2,
+          pointBackgroundColor: colors[dataset.color]
+            ? colors[dataset.color || "dark"].main
+            : colors.dark.main,
+          borderColor: colors[dataset.color]
+            ? colors[dataset.color || "dark"].main
+            : colors.dark.main,
+          maxBarThickness: 6,
+        };
 
-          const gradientLine = {
-            ...dataset,
-            type: "line",
-            tension: 0,
-            pointRadius: 0,
-            borderWidth: 4,
-            borderColor: colors[dataset.color]
-              ? colors[dataset.color || "dark"].main
-              : colors.dark.main,
-            fill: true,
-            maxBarThickness: 6,
-            backgroundColor: gradientChartLine(
-              chartRef.current.children[0],
-              colors[dataset.color] ? colors[dataset.color || "dark"].main : colors.dark.main
-            ),
-          };
+        const gradientLine = {
+          ...dataset,
+          type: "line",
+          tension: 0,
+          pointRadius: 0,
+          borderWidth: 4,
+          borderColor: colors[dataset.color]
+            ? colors[dataset.color || "dark"].main
+            : colors.dark.main,
+          fill: true,
+          maxBarThickness: 6,
+          backgroundColor: gradientChartLine(
+            chartRef.current.children[0],
+            colors[dataset.color] ? colors[dataset.color || "dark"].main : colors.dark.main
+          ),
+        };
 
-          const bar = {
-            ...dataset,
-            type: "bar",
-            weight: 5,
-            borderWidth: 0,
-            borderRadius: 4,
-            backgroundColor: colors[dataset.color]
-              ? colors[dataset.color || "dark"].main
-              : colors.dark.main,
-            fill: false,
-            maxBarThickness: 35,
-          };
+        const bar = {
+          ...dataset,
+          type: "bar",
+          weight: 5,
+          borderWidth: 0,
+          borderRadius: 4,
+          backgroundColor: colors[dataset.color]
+            ? colors[dataset.color || "dark"].main
+            : colors.dark.main,
+          fill: false,
+          maxBarThickness: 35,
+        };
 
-          const thinBar = {
-            ...dataset,
-            type: "bar",
-            weight: 5,
-            borderWidth: 0,
-            borderRadius: 4,
-            backgroundColor: colors[dataset.color]
-              ? colors[dataset.color || "dark"].main
-              : colors.dark.main,
-            fill: false,
-            maxBarThickness: 10,
-          };
+        const thinBar = {
+          ...dataset,
+          type: "bar",
+          weight: 5,
+          borderWidth: 0,
+          borderRadius: 4,
+          backgroundColor: colors[dataset.color]
+            ? colors[dataset.color || "dark"].main
+            : colors.dark.main,
+          fill: false,
+          maxBarThickness: 10,
+        };
 
-          if (dataset.chartType === "default-line") {
-            finalConfigs = defaultLine;
-          } else if (dataset.chartType === "gradient-line") {
-            finalConfigs = gradientLine;
-          } else if (dataset.chartType === "thin-bar") {
-            finalConfigs = thinBar;
-          } else {
-            finalConfigs = bar;
-          }
+        if (dataset.chartType === "default-line") {
+          finalConfigs = defaultLine;
+        } else if (dataset.chartType === "gradient-line") {
+          finalConfigs = gradientLine;
+        } else if (dataset.chartType === "thin-bar") {
+          finalConfigs = thinBar;
+        } else {
+          finalConfigs = bar;
+        }
 
-          return { ...finalConfigs };
-        })
+        return { ...finalConfigs };
+      })
       : [];
 
     setChartData(configs(chart.labels || [], chartDatasets));
