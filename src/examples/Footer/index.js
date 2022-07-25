@@ -50,7 +50,7 @@ function Footer({ company, links }) {
         by
         <Link href={href} target="_blank">
           <MDTypography variant="button" fontWeight="medium">
-            &nbsp;{name}&nbsp;.
+            &nbsp;{name}.&nbsp;
           </MDTypography>
         </Link>
         A final year degree project.

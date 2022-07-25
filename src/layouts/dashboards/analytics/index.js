@@ -2,47 +2,88 @@ import { useEffect, useState } from "react";
 import axios from "axios"
 
 import Grid from "@mui/material/Grid";
+import Icon from "@mui/material/Icon";
 
 import MDBox from "components/MDBox";
+import SalesTable from "examples/Tables/SalesTable";
 
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
 import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
 import Card from "@mui/material/Card";
 import MDTypography from "components/MDTypography";
 import DataTable from "examples/Tables/DataTable";
 import MixedChart from "examples/Charts/MixedChart";
-import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
 
 import StudentCell from "layouts/dashboards/sales/components/StudentCell";
 import CgpaCell from "layouts/dashboards/sales/components/CgpaCell";
 import DefaultCell from "layouts/dashboards/sales/components/DefaultCell";
 
-import ResultsByDepartment from "layouts/dashboards/analytics/components/ResultsByDepartment";
+const groupBy = function (array, key) {
+  return array.reduce(function (rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
 
-// Data
-import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
-import mixedChartData from "layouts/pages/charts/data/mixedChartData";
-import defaultDoughnutChartData from "layouts/pages/charts/data/defaultDoughnutChartData";
+const orderedObjects = (unordered) => (
+  Object.keys(unordered).sort().reduce(
+    (obj, key) => {
+      obj[key] = unordered[key];
+      return obj;
+    },
+    {}
+  )
+)
 
 function Analytics() {
-  const { students } = reportsLineChartData;
 
   const [allStudents, setAllStudents] = useState([]);
+  const [allCgpas, setAllCgpas] = useState([]);
+  const [allSessions, setAllSessions] = useState([]);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [cgpasBySession, setCgpasBySession] = useState([]);
+  const [sessionNames, setSessionNames] = useState([]);
+  const [departmentResults, setDepartmentResults] = useState([]);
   const [averageCgpa, setAverageCgpa] = useState([]);
   const [lowStudents, setLowStudents] = useState([]);
   const [dropoutTableData, setDropoutTableData] = useState(null);
+  const [mixedChartData, setMixedChartData] = useState(null);
 
   const fetchStudents = async () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/students`);
       setAllStudents(res.data);
     } catch (error) {
-      console.log("error", error)
+      console.error("error", error)
+    }
+  }
+
+  const fetchCgpas = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/cgpas`);
+      setAllCgpas(res.data);
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+
+  const fetchSessions = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/sessions`);
+      setAllSessions(res.data);
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+
+  const fetchDepartments = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/departments`);
+      setAllDepartments(res.data);
+    } catch (error) {
+      console.error("error", error)
     }
   }
 
@@ -74,9 +115,72 @@ function Analytics() {
     setDropoutTableData(dropoutData);
   }, [allStudents]);
 
+  useEffect(() => {
+    const groupedCgpasBySession = groupBy(allCgpas, "session_id");
+    const sortedCgpasBySession = orderedObjects(groupedCgpasBySession);
+    const cgpaValsBySession = []
+    Object.values(sortedCgpasBySession).map(value => {
+      let avg = value.reduce(function (avg, curr, _, { length }) {
+        return avg + Number(curr.gpa) / length;
+      }, 0)
+      cgpaValsBySession.push(avg)
+    })
+    setCgpasBySession(cgpaValsBySession);
+
+
+  }, [allCgpas])
+
+  useEffect(() => {
+    if (allDepartments.length > 0 && allStudents.length > 0) {
+      const groupedStudentsByDepartments = groupBy(allStudents, "department_id");
+      let depts = {};
+      allDepartments.map(department => {
+        depts[department.id] = department.name;
+      });
+
+      const deptResults = [];
+
+      for (const [key, value] of Object.entries(groupedStudentsByDepartments)) {
+        const avg = value.reduce(function (avg, curr, _, { length }) {
+          return avg + Number(curr.cgpa) / length;
+        }, 0)
+        deptResults.push({
+          department: depts[key],
+          averageCgpa: avg.toFixed(2),
+          students: value.length
+        })
+      }
+      setDepartmentResults(deptResults);
+    }
+
+  }, [allStudents, allDepartments])
+
+
+  useEffect(() => {
+    const sesssionNamesArray = allSessions.map(session => `${session.semester_name} ${session.session}`)
+    setSessionNames(sesssionNamesArray);
+  }, [allSessions])
+
+  useEffect(() => {
+    const mixedData = {
+      labels: sessionNames,
+      datasets: [
+        {
+          chartType: "thin-bar",
+          label: "Average CGPA",
+          color: "dark",
+          data: cgpasBySession,
+        },
+      ],
+    };
+    setMixedChartData(mixedData);
+  }, [sessionNames, cgpasBySession])
 
   useEffect(() => {
     fetchStudents();
+    fetchCgpas();
+    fetchSessions();
+    fetchDepartments();
   }, [])
 
 
@@ -120,13 +224,53 @@ function Analytics() {
       <MDBox mb={6}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <MixedChart
-              icon={{ color: "primary", component: "auto_graph" }}
-              title="Students performance per semester"
-              description="Applied vs left"
-              height="19.75rem"
-              chart={mixedChartData}
-            />
+            {
+              mixedChartData && (
+                <MixedChart
+                  icon={{ color: "primary", component: "auto_graph" }}
+                  title="Students performance per semester"
+                  description="Average CGPA per semester"
+                  height="19.75rem"
+                  chart={mixedChartData}
+                />
+              )
+            }
+
+            <MDBox mt={3}>
+              <Card sx={{ width: "100%" }}>
+                <MDBox display="flex">
+                  <MDBox
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    width="4rem"
+                    height="4rem"
+                    variant="gradient"
+                    bgColor="success"
+                    color="white"
+                    shadow="md"
+                    borderRadius="xl"
+                    ml={3}
+                    mt={-2}
+                  >
+                    <Icon fontSize="medium" color="inherit">
+                      book
+                    </Icon>
+                  </MDBox>
+                  <MDTypography variant="h6" sx={{ mt: 2, mb: 1, ml: 2 }}>
+                    Average Result by Department
+                  </MDTypography>
+                </MDBox>
+                <MDBox p={2}>
+                  <Grid container>
+                    <Grid item xs={12} md={12} lg={12}>
+                      <SalesTable rows={departmentResults} shadow={false} />
+                    </Grid>
+                  </Grid>
+                </MDBox>
+              </Card>
+            </MDBox>
+
           </Grid>
           <Grid item xs={12} md={6}>
             <Card>
@@ -149,51 +293,6 @@ function Analytics() {
             </Card>
           </Grid>
         </Grid>
-      </MDBox>
-      <MDBox py={3}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <ResultsByDepartment />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <DefaultDoughnutChart
-              icon={{ color: "success", component: "donut_small" }}
-              title="Students by Class"
-              description=""
-              chart={defaultDoughnutChartData}
-            />
-          </Grid>
-        </Grid>
-        <MDBox mt={6}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="Student dropouts"
-                  description="By department"
-                  date="last semester"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="last 10 sessions"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) projected dropouts this session.
-                    </>
-                  }
-                  date="last semester"
-                  chart={students}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
       </MDBox>
       <Footer />
     </DashboardLayout>
