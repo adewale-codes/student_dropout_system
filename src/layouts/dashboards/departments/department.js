@@ -1,4 +1,7 @@
 import Grid from "@mui/material/Grid";
+import { useEffect, useState, useCallback } from "react";
+import axios from "axios"
+import { useParams } from "react-router-dom";
 
 import MDBox from "components/MDBox";
 
@@ -9,12 +12,107 @@ import Card from "@mui/material/Card";
 import MDTypography from "components/MDTypography";
 import DefaultDoughnutChart from "examples/Charts/DoughnutCharts/DefaultDoughnutChart";
 import CategoriesList from "examples/Lists/CategoriesList";
-import MDBadge from "components/MDBadge";
 
-import studentsDoughnutChartData from "layouts/dashboards/departments/data/studentsDoughnutChartData";
-import studentsListData from "layouts/dashboards/departments/data/studentsListData";
 
 function Department() {
+  const { departmentName } = useParams();
+  const [department, setDepartment] = useState(null);
+  const [allDepartments, setAllDepartments] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
+  const [studentValsByDepartment, setStudentValsByDepartment] = useState([]);
+  const [studentsDoughnutChartData, setStudentsDoughnutChartData] = useState([]);
+  const [watchList, setWatchList] = useState([]);
+  const [dropoutList, setDropoutList] = useState([]);
+  const [studentsListData, setStudentsListData] = useState([])
+
+  const fetchDepartments = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/departments`);
+      setAllDepartments(res.data);
+    } catch (error) {
+      console.error("error", error)
+    }
+  }
+  const fetchStudents = useCallback(
+    async () => {
+      try {
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/students`);
+        if (department) {
+          const filteredStudents = res.data.filter(student => student.department_id === department.id)
+          const sortedStudents = filteredStudents.sort((a, b) => (Number(a.cgpa) > Number(b.cgpa)) ? -1 : 1)
+          setAllStudents(sortedStudents);
+        }
+      } catch (error) {
+        console.error("error", error)
+      }
+    },
+    [department],
+  )
+
+  useEffect(() => {
+    const selectedDepartment = allDepartments.find(department => department.name === departmentName);
+    setDepartment(selectedDepartment);
+  }, [allDepartments, departmentName])
+
+  useEffect(() => {
+    if (allStudents.length > 0) {
+      const studentDepartmentVals = []
+      allStudents.map(student => {
+        studentDepartmentVals.push({
+          name: `${student.first_name} ${student.last_name}`,
+          value: Number(student.cgpa)
+        })
+      })
+      setStudentValsByDepartment(studentDepartmentVals)
+      const listData = allStudents.map(student => {
+        return ({
+          color: "dark",
+          name: `${student.first_name} ${student.last_name}`,
+          description: (
+            <>
+              CGPA - {" "}
+              <MDTypography variant="caption" color="text" fontWeight="medium">
+                {student.cgpa}
+              </MDTypography>
+            </>
+          ),
+          route: `/students/${student.id}`,
+        })
+      })
+      setStudentsListData(listData);
+    }
+  }, [allStudents, department])
+
+  useEffect(() => {
+    const names = studentValsByDepartment.map(val => val.name)
+    const values = studentValsByDepartment.map(val => val.value)
+    const chartData = {
+      labels: names.slice(0, 6),
+      datasets: {
+        label: "Projects",
+        backgroundColors: ["info", "dark", "error", "secondary", "primary", "success"],
+        data: values.slice(0, 6),
+      },
+    };
+    setStudentsDoughnutChartData(chartData)
+  }, [studentValsByDepartment])
+
+  useEffect(() => {
+    const watches = allStudents.filter(student => (Number(student.cgpa) <= 2 && Number(student.cgpa) >= 1.0));
+    const drops = allStudents.filter(student => (Number(student.cgpa) < 1.0));
+    setWatchList(watches);
+    setDropoutList(drops);
+  }, [allStudents])
+
+
+  useEffect(() => {
+    fetchDepartments();
+  }, [])
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents])
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -32,7 +130,7 @@ function Department() {
                     <DefaultDoughnutChart
                       icon={{ color: "success", component: "donut_small" }}
                       title="Top 6 students"
-                      description="Average CGPA"
+                      description="CGPA"
                       chart={studentsDoughnutChartData}
                     />
                   </MDBox>
@@ -45,10 +143,9 @@ function Department() {
                       </MDTypography>
                       <MDBox mt={2} mb={1} lineHeight={0}>
                         <MDTypography variant="h3" fontWeight="bold">
-                          2
+                          {watchList.length}
                         </MDTypography>
                       </MDBox>
-                      <MDBadge variant="contained" color="error" badgeContent="-1.3%" container />
                     </MDBox>
                     <MDBox p={3} mt={3}>
                       <MDTypography variant="body2" color="text">
@@ -56,10 +153,9 @@ function Department() {
                       </MDTypography>
                       <MDBox mt={2} mb={1} lineHeight={0}>
                         <MDTypography variant="h3" fontWeight="bold">
-                          1
+                          {dropoutList.length}
                         </MDTypography>
                       </MDBox>
-                      <MDBadge variant="contained" color="success" badgeContent="+4.3%" container />
                     </MDBox>
                   </Card>
                 </Grid>

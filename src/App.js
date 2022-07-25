@@ -101,7 +101,7 @@ export default function App() {
       )}
       <Routes>
         {getRoutes(routes)}
-        <Route path="/departments/:departmentId" element={<Department />} />;
+        <Route path="/departments/:departmentName" element={<Department />} />;
         <Route path="/students/:studentId" element={<Student />} />;
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

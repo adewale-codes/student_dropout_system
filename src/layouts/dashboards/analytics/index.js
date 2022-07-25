@@ -20,14 +20,14 @@ import StudentCell from "layouts/dashboards/sales/components/StudentCell";
 import CgpaCell from "layouts/dashboards/sales/components/CgpaCell";
 import DefaultCell from "layouts/dashboards/sales/components/DefaultCell";
 
-const groupBy = function (array, key) {
+export const groupBy = function (array, key) {
   return array.reduce(function (rv, x) {
     (rv[x[key]] = rv[x[key]] || []).push(x);
     return rv;
   }, {});
 };
 
-const orderedObjects = (unordered) => (
+export const orderedObjects = (unordered) => (
   Object.keys(unordered).sort().reduce(
     (obj, key) => {
       obj[key] = unordered[key];
