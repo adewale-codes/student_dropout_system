@@ -22,7 +22,6 @@
 
 import Dashboard from "layouts/dashboards/analytics";
 import Departments from "layouts/dashboards/departments";
-import Sales from "layouts/dashboards/sales";
 import ProfileOverview from "layouts/pages/profile/profile-overview";
 
 // @mui icons
@@ -45,7 +44,7 @@ const routes = [
   { type: "divider", key: "divider-0" },
   {
     type: "collapse",
-    name: "Dashboards",
+    name: "Reports",
     key: "dashboards",
     icon: <Icon fontSize="medium">dashboard</Icon>,
     collapse: [
@@ -60,12 +59,6 @@ const routes = [
         key: "departments",
         route: "/departments",
         component: <Departments />,
-      },
-      {
-        name: "Sales",
-        key: "sales",
-        route: "/dashboards/sales",
-        component: <Sales />,
       },
     ],
   },
